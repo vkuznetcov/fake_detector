@@ -105,17 +105,15 @@ class ControlPanel(QWidget):
         pred1=''
         pred2=''
         if self.path_field.toPlainText() != '' :
-            #pred1,pred2= main.Run(self.path_field.toPlainText(),'models/model_c1.pth')
             p = Path("method_ela_1/main.py").resolve()
             print(p)
             print(self.path_field.toPlainText())
-            #os.system(str(p)+" " +str(self.path_field.toPlainText()))
-            #os.system("python C:/Users/dream/PycharmProjects/fake_detector/method_ela_1/main.py"+" -p " +self.path_field.toPlainText())
             os.system("python "+str(p) +" -p " +self.path_field.toPlainText())
 
             print(pred1,'\n',pred2)
-            self.result_label1.setText(pred2)
-        return pred1,pred2
+            self.result_label1.setText(pred1)
+            self.result_label2.setText(pred2)
+
 
 
 class WinBrowser(QWidget):
