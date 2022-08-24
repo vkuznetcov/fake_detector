@@ -5,7 +5,6 @@ from PIL import Image, ImageChops, ImageEnhance
 
 def convert_to_ela_image(path, quality):
     temp_filename = 'temp_file_name.jpg'
-    ela_filename = 'temp_ela.png'
 
     image = Image.open(path).convert('RGB')
     image.save(temp_filename, 'JPEG', quality=quality)
@@ -30,7 +29,7 @@ def prepare_image(image_path):
 
 
 def method_ela_2(image_path):
-    model_path = "./model/method_ela_2.h5"
+    model_path = "models/method_ela_2.h5"
     model = keras.models.load_model(model_path)
 
     image = prepare_image(image_path).reshape(1, 128, 128, 3)
@@ -39,5 +38,7 @@ def method_ela_2(image_path):
 
     if output[0] < output[1]:
         print("Real!", output[1])
+        return "Real", output[1]
     else:
         print("Fake!", output[0])
+        return "Fake", output[0]

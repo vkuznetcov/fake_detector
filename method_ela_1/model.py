@@ -1,12 +1,8 @@
-#importing libs
-
 import torch.nn as nn
-
 
 
 # auth -> 1 and tp -> 0
 class IMDModel(nn.Module):
-
     def __init__(self):
         super(IMDModel,self).__init__()
 
@@ -35,13 +31,12 @@ class IMDModel(nn.Module):
                         nn.Softmax()
         )
 
-
     def forward(self, img):
 
         d1 = self.down_conv1(img)
-        d2 = self.down_conv2(d1)
 
+        d2 = self.down_conv2(d1)
         d2 = d2.view(-1, d2.shape[1]*d2.shape[2]*d2.shape[3])
+
         out = self.linear(d2)
-        
         return out
