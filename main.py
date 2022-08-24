@@ -111,7 +111,7 @@ class ControlPanel(QWidget):
             print(self.path_field.toPlainText())
             #os.system(str(p)+" " +str(self.path_field.toPlainText()))
             #os.system("python C:/Users/dream/PycharmProjects/fake_detector/method_ela_1/main.py"+" -p " +self.path_field.toPlainText())
-            pred1,pred2=os.system("python "+str(p) +" -p " +self.path_field.toPlainText())
+            os.system("python "+str(p) +" -p " +self.path_field.toPlainText())
 
             print(pred1,'\n',pred2)
             self.result_label1.setText(pred2)
