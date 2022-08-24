@@ -30,7 +30,7 @@ def prepare_image(image_path):
 
 
 def method_ela_2(image_path):
-    model_path = "./model/method_ela_2.h5"
+    model_path = "../models/method_ela_2.h5"
     model = keras.models.load_model(model_path)
 
     image = prepare_image(image_path).reshape(1, 128, 128, 3)
