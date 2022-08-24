@@ -1,10 +1,13 @@
 import sys
+import os
+import torch
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import pyqtSlot, Qt, QProcess
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFormLayout, QSpinBox, QVBoxLayout, QWidget, QHBoxLayout, \
     QSizePolicy, QDoubleSpinBox, QLabel, QCheckBox,QPushButton,QTextEdit,QProgressBar
 from PyQt5.QtWidgets import QDialog
 from PyQt5.QtWidgets import QFileDialog
+from pathlib import Path
 
 class Window(QMainWindow):
     def __init__(self):
@@ -61,6 +64,7 @@ class ControlPanel(QWidget):
         self.search_button.clicked.connect(self.browser.searchFiles)
         self.search_button.clicked.connect(self.PrintPath)
 
+
         self.start_layout= QHBoxLayout()
         self.bar = QProgressBar()
         self.bar.setTextVisible(True)
@@ -69,6 +73,7 @@ class ControlPanel(QWidget):
         self.bar.setValue(100)
         self.start_layout.addWidget(self.bar)
         self.start_button= QPushButton('Start',self)
+        self.start_button.clicked.connect(self.Start)
         self.start_layout.addWidget(self.start_button)
         self.layout.addLayout(self.start_layout)
 
@@ -96,6 +101,20 @@ class ControlPanel(QWidget):
     def PrintPath(self):
         self.path_field.setText(self.browser.filename)
 
+    def Start(self):
+        pred1=''
+        pred2=''
+        if self.path_field.toPlainText() != '' :
+            p = Path("method_ela_1/main.py").resolve()
+            print(p)
+            print(self.path_field.toPlainText())
+            os.system("python "+str(p) +" -p " +self.path_field.toPlainText())
+
+            print(pred1,'\n',pred2)
+            self.result_label1.setText(pred1)
+            self.result_label2.setText(pred2)
+
+
 
 class WinBrowser(QWidget):
     def __init__(self):
@@ -107,11 +126,11 @@ class WinBrowser(QWidget):
                                             'Images (*.png, *.xmp *.jpg)')
         self.filename=fname[0]
 
-def start_app():
+def StartApp():
     app = QApplication(sys.argv)
     window = Window()
     sys.exit(app.exec_())
 
 
 if __name__ == '__main__':
-    start_app()
+    StartApp()
