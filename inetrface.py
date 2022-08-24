@@ -97,8 +97,10 @@ class ControlPanel(QWidget):
 
         self.setLayout(self.layout)
 
+
     def PrintPath(self):
         self.path_field.setText(self.browser.filename)
+
 
     def Start(self):
         import os
@@ -115,8 +117,8 @@ class ControlPanel(QWidget):
             regex = r"(?<=\()[^\(\)]+(?=\))"
             result = re.findall(regex, out.decode("utf-8"))[0].split(', ')
 
-            self.result_label1.setText(str(result))
-           # self.result_label2.setText(result[1])
+            self.result_label1.setText(result[0])
+            self.result_label2.setText(result[1])
 
 
 class WinBrowser(QWidget):
@@ -129,9 +131,12 @@ class WinBrowser(QWidget):
                                             'Images (*.png, *.xmp *.jpg)')
         self.filename=fname[0]
 
+
 def StartApp():
     app = QApplication(sys.argv)
     window = Window()
     sys.exit(app.exec_())
 
-StartApp()
+
+if __name__ == '__main__':
+    StartApp()
