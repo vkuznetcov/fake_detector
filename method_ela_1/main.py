@@ -8,10 +8,10 @@ from model import IMDModel
 
 
 def infer(img_path, model, device):
-    print("Performing Level 1 analysis...")
+    #print("Performing Level 1 analysis...")
     pred1 = level1.findMetadata(img_path=img_path)
 
-    print("Performing Level 2 analysis...")
+    #print("Performing Level 2 analysis...")
     ela.ELA(img_path=img_path)
 
     img = Image.open("temp/ela_img.jpg")
@@ -22,7 +22,7 @@ def infer(img_path, model, device):
     out = model(torch.from_numpy(img).to(device=device))
     y_pred = torch.max(out, dim=1)[1]
 
-    print("Prediction:", end=' ')
+    #print("Prediction:", end=' ')
     pred2 = "Authentic" if y_pred else "Tampared"  # auth -> 1 and tp -> 0
     return pred1, pred2
 
@@ -37,8 +37,9 @@ def Run(img_path, model_path):
     pred1, pred2 = infer(model=model, img_path=img_path, device=device)
     return pred1, pred2
 
+
 if __name__ == '__main__':
-    print("HEre")
+    #print("HEre")
     parser = argparse.ArgumentParser(description='Image Manipulation Detection')
 
     req_args = parser.add_argument_group('Required Args')
@@ -47,11 +48,9 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu') #selecting device
-    print("Working on",device)
+    #print("Working on",device)
 
     model_path = "models/model_c1.pth"
     model = torch.load(model_path, map_location='cpu')
-
-    import sys
-    infer(model=model, img_path=args.img_path, device=device)
+    print(infer(model=model, img_path=args.img_path, device=device))
 

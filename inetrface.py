@@ -107,19 +107,16 @@ class ControlPanel(QWidget):
         if self.path_field.toPlainText() != '' :
             path = os.path.abspath('method_ela_1/main.py')
             param = str(self.path_field.toPlainText())
-            command = str(path) + " -p " + param
-            print(type(command), command)
-            #result = os.system(command)
-            #print("ВЕРНУЛ Я БЛЯТЬ, ПОШЛИ ПОКУРИМ", result)
-            #print("!!!")
 
-            import sys
-            import subprocess
-            out = subprocess.check_output([sys.executable, str(path), "-p", param])
-            print ("OUT:", out)
-            #pred1,pred2= main1.Run(self.path_field.toPlainText(), "/models/model_c1.pth")
-            print(pred1,'\n',pred2)
-        return pred1,pred2
+            import subprocess, re
+            proc = subprocess.Popen([path, "-p", param], stdout=subprocess.PIPE, shell=True)
+            (out, err) = proc.communicate()
+
+            regex = r"(?<=\()[^\(\)]+(?=\))"
+            result = re.findall(regex, out.decode("utf-8"))[0].split(', ')
+
+            self.result_label1.setText(str(result))
+           # self.result_label2.setText(result[1])
 
 
 class WinBrowser(QWidget):
