@@ -17,11 +17,13 @@ def findMetadata(img_path):
                 # print("Found Software Traces...")
                 # print("Software Signature: ",value)
                 flag = 1
-                res2 =res+ f"Found Software Traces...\nSoftware Signature: {value}\n"
-                print(res2)
+                value.replace('(',' ')
+                value.replace(')', ' ')
+                res =res+ f"Found Software Traces...\nSoftware Signature: {value}\n"
+                print(res)
         if flag == 0:
-            res1 = res+"No Softare Signature Found. Seems like real image..."
-            print(res1)
+            res = res+"No Softare Signature Found. Seems like real image..."
+            print(res)
             return res
 
     except Exception as e:
