@@ -1,13 +1,15 @@
 import sys
-import os
 import torch
+import os
+import subprocess, re
 from PyQt5 import QtWidgets
 from PyQt5.QtCore import pyqtSlot, Qt, QProcess
 from PyQt5.QtWidgets import QApplication, QMainWindow, QFormLayout, QSpinBox, QVBoxLayout, QWidget, QHBoxLayout, \
     QSizePolicy, QDoubleSpinBox, QLabel, QCheckBox,QPushButton,QTextEdit,QProgressBar
 from PyQt5.QtWidgets import QDialog
 from PyQt5.QtWidgets import QFileDialog
-from pathlib import Path
+from subprocess import Popen, PIPE
+
 
 class Window(QMainWindow):
     def __init__(self):
@@ -22,10 +24,10 @@ class Window(QMainWindow):
         self.panel = ControlPanel()
         self.main_lay.addWidget(self.panel)
 
-
         self.widget.setLayout(self.main_lay)
         self.setCentralWidget(self.widget)
         self.show()
+
 
 class ControlPanel(QWidget):
     def __init__(self):
@@ -57,13 +59,10 @@ class ControlPanel(QWidget):
         self.path_layout.addWidget(self.path_field)
         self.path_layout.addWidget(self.search_button)
 
-
-
         self.layout.addLayout(self.path_layout)
         self.browser = WinBrowser()
         self.search_button.clicked.connect(self.browser.searchFiles)
         self.search_button.clicked.connect(self.PrintPath)
-
 
         self.start_layout= QHBoxLayout()
         self.bar = QProgressBar()
@@ -98,22 +97,26 @@ class ControlPanel(QWidget):
 
         self.setLayout(self.layout)
 
+
     def PrintPath(self):
         self.path_field.setText(self.browser.filename)
 
+
     def Start(self):
-        pred1=''
-        pred2=''
         if self.path_field.toPlainText() != '' :
-            p = Path("method_ela_1/main.py").resolve()
-            print(p)
-            print(self.path_field.toPlainText())
-            os.system("python "+str(p) +" -p " +self.path_field.toPlainText())
+            path = os.path.abspath('method_ela_1/main.py')
+            param = str(self.path_field.toPlainText())
 
-            print(pred1,'\n',pred2)
-            self.result_label1.setText(pred1)
-            self.result_label2.setText(pred2)
-
+            proc = subprocess.Popen(["python",path, "-p", param], stdout=subprocess.PIPE,shell=True)
+            (out, err) = proc.communicate()
+            proc.wait()
+            regex = r"(?<=\().+(?=\))"
+            result = re.findall(regex, out.decode("utf-8"))
+            result = result[len(result) - 1]
+            result=result.replace('\\n','')
+            result = result.split(", ")
+            self.result_label1.setText(result[0])
+            self.result_label2.setText(result[1])
 
 
 class WinBrowser(QWidget):
@@ -125,6 +128,7 @@ class WinBrowser(QWidget):
         fname = QFileDialog.getOpenFileName(self, 'Open file', 'C:\\',
                                             'Images (*.png, *.xmp *.jpg)')
         self.filename=fname[0]
+
 
 def StartApp():
     app = QApplication(sys.argv)
