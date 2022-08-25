@@ -108,7 +108,7 @@ class ControlPanel(QWidget):
 
             proc = subprocess.Popen(["python", path, "-p", param], stdout=subprocess.PIPE, shell=True)
             (out, err) = proc.communicate()
-            #proc.wait()
+            proc.wait()
 
             print(out.decode("utf-8"))
 
