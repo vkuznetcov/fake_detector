@@ -41,7 +41,7 @@ class ControlPanel(QWidget):
         self.method_1 = QCheckBox("Metadata and ELA", self)
         self.method_2 = QCheckBox("ELA2", self)
         self.method_3 = QCheckBox("Face spoffnet", self)
-        self.method_4 = QCheckBox("Method4", self)
+        self.method_4 = QCheckBox("Face mobilenet", self)
         self.method_layout.addWidget(self.method_1)
         self.method_layout.addWidget(self.method_2)
         self.method_layout.addWidget(self.method_3)
@@ -90,11 +90,11 @@ class ControlPanel(QWidget):
         self.result_layout.addRow(QLabel('Name of method'), QLabel('Result'))
         self.result_layout.setHorizontalSpacing(50)
         self.result_layout.setVerticalSpacing(20)
-        self.result_layout.addRow(QLabel('Metadata 1_1: '), self.result_label1)
-        self.result_layout.addRow(QLabel('ELA 1_2: '), self.result_label2)
-        self.result_layout.addRow(QLabel('ELA2 2: '), self.result_label3)
-        self.result_layout.addRow(QLabel('Face Spoffnet 3: '), self.result_label4)
-        self.result_layout.addRow(QLabel('Method 4: '), self.result_label5)
+        self.result_layout.addRow(QLabel('Metadata (1.1) : '), self.result_label1)
+        self.result_layout.addRow(QLabel('ELA (1.2) : '), self.result_label2)
+        self.result_layout.addRow(QLabel('ELA (2) : '), self.result_label3)
+        self.result_layout.addRow(QLabel('Face SpoffNet (3) : '), self.result_label4)
+        self.result_layout.addRow(QLabel('FaceMobileNet_v2 (4) : '), self.result_label5)
 
         self.layout.addSpacing(30)
         self.layout.addLayout(self.result_layout)
@@ -110,12 +110,15 @@ class ControlPanel(QWidget):
     def checking_methods(self):
         if self.method_1.checkState():
             self.image_manipulation_detection()
-        self.bar.setValue(50)
+        self.bar.setValue(40)
         if self.method_2.checkState():
-            self.error_level_analysis_2()
-        self.bar.setValue(75)
+            self.error_level_analysis()
+        self.bar.setValue(60)
         if self.method_3.checkState():
             self.face_spoffnet()
+        self.bar.setValue(80)
+        if self.method_4.checkState():
+            self.face_mobilenetv2()
         self.bar.setValue(100)
 
     def image_manipulation_detection(self):
@@ -136,7 +139,7 @@ class ControlPanel(QWidget):
             self.result_label1.setText(result[0])
             self.result_label2.setText(result[1])
 
-    def error_level_analysis_2(self):
+    def error_level_analysis(self):
         from method_ela_2 import main as ela2
         res,prob =ela2.method_ela_2(str(self.path_field.toPlainText()))
         self.result_label3.setText(str(res)+' Probability: '+str(prob))
@@ -146,11 +149,17 @@ class ControlPanel(QWidget):
         res,prob=spoff.method_face_spoffnet(str(self.path_field.toPlainText()))
         self.result_label4.setText(str(res) + ' Probability: ' + str(prob))
 
+    def face_mobilenetv2(self):
+        from method_face_mobilenetv2 import main as mobile
+        res,prob=mobile.method_face_mobilenetv2(str(self.path_field.toPlainText()))
+        self.result_label5.setText(str(res) + ' Probability: ' + str(prob))
+
     def start(self):
         self.result_label1.setText('...')
         self.result_label2.setText('...')
         self.result_label3.setText('...')
         self.result_label4.setText('...')
+        self.result_label5.setText('...')
         if self.path_field.toPlainText() != '':
             self.checking_methods()
 

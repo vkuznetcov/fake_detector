@@ -10,7 +10,7 @@ def prepare_image(image_path):
 
 
 def method_face_mobilenetv2(image_path):
-    model_path = "../models/mobilenetv2.h5"
+    model_path = "models/mobilenetv2.h5"
     model = keras.models.load_model(model_path)
 
     image = prepare_image(image_path).reshape(-1, 300, 300, 3)
